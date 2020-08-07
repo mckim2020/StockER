@@ -36,6 +36,7 @@ class Net(nn.Module):
 
 
 net = Net()
+"""Note that the input has to be 32 by 32 matrix in this net system"""
 input = torch.randn(1, 1, 32, 32)
 target = torch.randn(10)
 target = target.view(1, -1)
@@ -53,3 +54,21 @@ optimizer.zero_grad()
 output = net(input)
 loss = criterion(output, target)
 loss.backward()
+
+"""Update"""
+optimizer.step()
+
+"""test"""
+print(net.conv1.bias.grad)
+
+"""
+print('conv1.bias.grad before backward')
+print(net.conv1.bias.grad)
+
+print('conv1.bias.grad after backward')
+print(net.conv1.bias.grad)
+
+params = list(net.parameters())
+print(len(params))
+"""
+
