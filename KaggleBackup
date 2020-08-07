@@ -72,12 +72,29 @@ df = pd.read_excel("../input/stockdata-test/SKT.xlsx")
 # print(df.at[2,'PRICE'])
 # print(df.at[2,'FORN'])
 
-dataMat = torch.zeros(1, 1, 32, 32)
+dataMat = torch.empty(1, 1, 4, 4)
 
-for i in range(0,15):
-    for j in range(0,15):
-        dataMat(0, 0, i, j) = df.at[2, 'PRICE']
+# Creating data matrix
+for i in range(0,1):
+    for j in range(0,1):
+        val = df.at[2, 'PRICE']
+        dataMat[0, 0, i, j] = val
 
+for i in range(2,3):
+    for j in range(0,1):
+        val = df.at[2, 'TRADE']
+        dataMat[0, 0, i, j] = val
+        
+for i in range(0,1):
+    for j in range(2,3):
+        val = df.at[2, 'INST']
+        dataMat[0, 0, i, j] = val
+        
+for i in range(2,3):
+    for j in range(2,3):
+        val = df.at[2, 'FORN']
+        dataMat[0, 0, i, j] = val
+        
 print(dataMat)
         
 # print(a)
