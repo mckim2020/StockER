@@ -19,6 +19,7 @@ for line in range(60):
     
     inTens, targetTens = dataToTens(line)
     outTens = net(inTens)
+    targetTens = targetTens.unsqueeze(1)
     
     loss = criterion(outTens, targetTens)
     loss.backward()
