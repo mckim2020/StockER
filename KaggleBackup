@@ -14,91 +14,187 @@ import torch.optim as optim
 # Input data files are available in the read-only "../input/" directory
 # For example, running this (by clicking run or pressing Shift+Enter) will list all files under the input directory
 
+
+#Create Net
+# class Net(nn.Module):
+#     def __init__(self):
+#         super(Net, self).__init__()
+#         #Kernel
+#         self.conv1 = nn.Conv2d(1, 6, 5)
+#         self.pool = nn. MaxPool2d(2, 2)
+#         self.conv2 = nn.Conv2d(6, 16, 5)
+
+#         #Output
+#         self.fc1 = nn.Linear(16 * 5 * 5, 120)
+#         self.fc2 = nn.Linear(120, 84)
+#         self.fc3 = nn.Linear(84, 10)
+        
+        
+#     def forward(self, x):
+#         x = F.max_pool2d(F.relu(self.conv1(x)), (2, 2))
+#         x = F.max_pool2d(F.relu(self.conv2(x)), 2)
+#         x = x.view(-1, 16 * 5 * 5)
+#         x = F.relu(self.fc1(x))
+#         x = F.relu(self.fc2(x))
+#         x = self.fc3(x)
+#         return x
+
+
 #Create Net
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
+        self.pool = nn.MaxPool2d(2, 2)
         #Kernel
-        self.conv1 = nn.Conv2d(1, 6, 5)
-        self.pool = nn. MaxPool2d(2, 2)
-        self.conv2 = nn.Conv2d(6, 16, 5)
-
+        self.conv1 = nn.Conv2d(1, 120, 5)
+        
+        self.conv2 = nn.Conv2d(120, 16 * 5 * 5, 5)
+        
+#         self.conv3 = nn.Conv2d(16, 64, 2)
+        
         #Output
-        self.fc1 = nn.Linear(16 * 5 * 5, 120)
-        self.fc2 = nn.Linear(120, 84)
-        self.fc3 = nn.Linear(84, 10)
-        self.fc4 = nn.Linear(10, 1)
+        self.fc0 = nn.Linear(16 * 5 * 5, 128)
+        self.fc1 = nn.Linear(128, 32)
+        self.fc2 = nn.Linear(32, 8)
+#         self.fc3 = nn.Linear(8, 1)
+        
         
     def forward(self, x):
-        x = F.max_pool2d(F.relu(self.conv1(x)), (2, 2))
-        x = F.max_pool2d(F.relu(self.conv2(x)), 2)
+        x = self.pool(x)
+        x = (F.relu(self.conv1(x)))
+        x = self.pool(x)
+        x = (F.relu(self.conv2(x)))
+        x = self.pool(x)
+#         x = (F.relu(self.conv3(x)))
+#         x = self.pool(x)
         x = x.view(-1, 16 * 5 * 5)
+        x = F.relu(self.fc0(x))
         x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
-        x = F.relu(self.fc3(x))
-        x = self.fc4(x)
+#         x = F.relu(self.fc2(x))
+        x = self.fc2(x)
         return x
+
+
+# Creating input data tensor
+# 지정 file의 n번째 줄의 데이터로 1 by 1 by 32 by 32 tensor를 만듬 
+def dataToTens(n, file): 
+    # nth row of stock dataset
+    # [[PRICE, INST], [TRADE, FORN]]
+    
+    inTens = torch.empty(1, 1, 32, 32)
+    
+# view()를 이용한 크기 조절은 나중에 다시 해볼 것 
+#     inTens[0, 0, 0, 0] = file.at[n, 'PRICE']
+#     inTens[0, 0, 0, 1] = file.at[n, 'INST']
+#     inTens[0, 0, 1, 0] = file.at[n, 'TRADE']
+#     inTens[0, 0, 1, 1] = file.at[n, 'FORN']
+#     inTens = inTens.view(1, -1)
+    
+    # 32 by 32 의 image 로 데이터를 변환 
+    valP = file.at[n, 'INST']
+    for i in range(0,16):
+        for j in range(0,16):
+            inTens[0, 0, i, j] = float(valP) / 100000
+
+    valT = file.at[n, 'FORN']
+    for i in range(16,32):
+        for j in range(0,16):
+            inTens[0, 0, i, j] = float(valT) / 100000
+        
+    valI = file.at[n+1, 'INST']
+    for i in range(0,16):
+        for j in range(16,32):
+            inTens[0, 0, i, j] = float(valI) / 100000
+        
+    valF = file.at[n+1, 'FORN']
+    for i in range(16,32):
+        for j in range(16,32):
+            inTens[0, 0, i, j] = float(valF) / 100000
+
+    targetTens = torch.zeros(1, 8)
+    # 우상향 그래프
+    if file.at[n-1, 'UPDOWN'] > 0:
+        for i in range(4):
+            targetTens[0, i] = -1
+    # 좌상향 그래프
+    else:
+        for i in range(4):
+            targetTens[0, i] = 1
+
+#     targetTens[0,:] =  file.at[n-1, 'UPDOWN']
+#     if float(file.at[n-1, 'UPDOWN']) > 0:
+#         targetTens[0] = 1
+#     else:
+#         targetTens[0] = -1
+    
+#     print(targetTens)
+#     print(inTens)
+#     print(targetTens)
+    return inTens, targetTens
+
+
+
 
 net = Net()
 
 #Note that the input has to be 32 by 32 matrix in this net system
-input = torch.randn(1, 1, 32, 32)
-target = torch.randn(1)
-target = target.view(1, -1)
+# input = torch.randn(1, 1, 32, 32)
+# target = torch.randn(1)
+# target = target.view(1, -1)
 
 #Create Loss Optimizer(SGD)
-optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
+optimizer = optim.SGD(net.parameters(), lr=0.01, momentum=0.9)
 criterion = nn.MSELoss()
 
-
-#Code under has to be implemented inside training loop
-
-#Zero the grad buffers(Initializing)
-optimizer.zero_grad()
-output = net(input)
-loss = criterion(output, target)
-loss.backward()
-
-#Update
-optimizer.step()
-
-#test
-# print(net.conv1.bias.grad)
-
-
 # Harvest data from excel file(종가, 거래량, 외국인, 기관, target: 등락률)
-df = pd.read_excel("../input/stockdata-test/SKT.xlsx")
+train_SKT = pd.read_excel("../input/stockdata01/SKT.xlsx")
 
-# print(df.at[2,'PRICE'])
-# print(df.at[2,'FORN'])
+# Learning Loop
+for line in range(1, 399):
+    #Zero the grad buffers(Initializing)
+    optimizer.zero_grad()
+    
+    inTens, targetTens = dataToTens(line, train_SKT)
+    outTens = net(inTens)
+    targetTens = targetTens.unsqueeze(1)
+    
+    loss = criterion(outTens, targetTens)
+    loss.backward()
 
-dataMat = torch.empty(1, 1, 4, 4)
+    #Update
+    optimizer.step()
 
-# Creating data matrix
-for i in range(0,1):
-    for j in range(0,1):
-        val = df.at[2, 'PRICE']
-        dataMat[0, 0, i, j] = val
+    #test
+    
+# print(net.conv1.bias.grad)
+    
 
-for i in range(2,3):
-    for j in range(0,1):
-        val = df.at[2, 'TRADE']
-        dataMat[0, 0, i, j] = val
-        
-for i in range(0,1):
-    for j in range(2,3):
-        val = df.at[2, 'INST']
-        dataMat[0, 0, i, j] = val
-        
-for i in range(2,3):
-    for j in range(2,3):
-        val = df.at[2, 'FORN']
-        dataMat[0, 0, i, j] = val
-        
-print(dataMat)
-        
-# print(a)
-# print(a[0, 0, 0, 2])
+# test set (4 * 5 sets)
+test_SKT = pd.read_excel("../input/test02/test.xlsx")
+
+
+test_input, test_target = dataToTens(3, test_SKT)
+prediction = net(test_input)
+print(test_target)
+print(prediction)
+
+
+# TEST METHOD --> Has to be modified
+# correct = 0
+# wrong = 0
+    
+# for i in range(1, 19): 
+#     test_input, test_target = dataToTens(i, test_SKT)
+#     prediction = net(test_input)
+#     if torch.mean(prediction) * test_target[0, 0] > 0:
+#         correct += 1
+#     else:
+#         wrong += 1
+
+# print("Probability of correct prediction in about %f %!", correct/(correct+wrong)*100)
+
+
+
 
 
 
