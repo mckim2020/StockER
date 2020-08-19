@@ -1,5 +1,5 @@
 # Creating input data tensor from excel file using pandas library
-# 지정 file의 n번째 줄의 데이터로 1 by 1 by 32 by 32 tensor를 만듬 
+# 지정 file의 n번째 줄의 데이터로 1 by 1 by 32 by 32 tensor를 만듦
 
 import pandas as pd
 
