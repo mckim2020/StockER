@@ -26,4 +26,6 @@ There are two main reasons for using CNN to analyze stock data.
 
 First, 2d convolution process of CNN(Convolutional Neural Network) can represent the relationship between buy&sell of institute and foreigners. 
 
+![Relationship of stock](https://github.com/mckim2020/Pictures/blob/master/put.jpeg)
+
 Second, 
