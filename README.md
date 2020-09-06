@@ -29,3 +29,6 @@ First, 2d convolution process of CNN(Convolutional Neural Network) can represent
 ![Relationship of stock](https://github.com/mckim2020/Pictures/blob/master/put.jpeg)
 
 Second, 
+
+# 3. Reusult
+![result1](https://github.com/mckim2020/Pictures/blob/master/result1.jpg)
