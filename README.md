@@ -18,5 +18,7 @@ Above two pirctures shows us a brief example of amount of buy and sell distribut
 
 Convolutional Neural Network, also known as CNN, shows its best peroformance for tasks that requires "extraction of main information". Thus, data extraction tasks such as image detection, face discrimination neural network uses CNN. 
 
+![Architecture of CNN](https://github.com/mckim2020/Pictures/blob/master/CNN.jpeg)
+
 The main idea of StockER architecture building was forming a set of data into a image. In other words, any kinds of stock data(in time domain) will be given as a "Picture" to our convolutional neural network. Since we used CNN module of pixels 32 by 32, it will be divided into 4 sectors which is filled with data of  buying and selling of institutes and foreigners, respectively. 
 
