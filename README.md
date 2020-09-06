@@ -14,3 +14,9 @@ On the other hand, if the data set does not follow Gaussian distribution, for ex
 
 Above two pirctures shows us a brief example of amount of buy and sell distribution of institute in Korea and foreign investors, respectively. Intuitively we can easily figure out ther exists no symmetricity in both data set and thus data Normalization Process is needed. 
 
+# 2. Process Using CNN(Convolutional Neural Network) 
+
+Convolutional Neural Network, also known as CNN, shows its best peroformance for tasks that requires "extraction of main information". Thus, data extraction tasks such as image detection, face discrimination neural network uses CNN. 
+
+The main idea of StockER architecture building was forming a set of data into a image. In other words, any kinds of stock data(in time domain) will be given as a "Picture" to our convolutional neural network. Since we used CNN module of pixels 32 by 32, it will be divided into 4 sectors which is filled with data of  buying and selling of institutes and foreigners, respectively. 
+
