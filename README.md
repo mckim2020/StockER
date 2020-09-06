@@ -22,3 +22,8 @@ Convolutional Neural Network, also known as CNN, shows its best peroformance for
 
 The main idea of StockER architecture building was forming a set of data into a image. In other words, any kinds of stock data(in time domain) will be given as a "Picture" to our convolutional neural network. Since we used CNN module of pixels 32 by 32, it will be divided into 4 sectors which is filled with data of  buying and selling of institutes and foreigners, respectively. 
 
+There are two main reasons for using CNN to analyze stock data.
+
+First, 2d convolution process of CNN(Convolutional Neural Network) can represent the relationship between buy&sell of institute and foreigners. 
+
+Second, 
