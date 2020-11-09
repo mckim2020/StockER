@@ -37,7 +37,7 @@ for row in sheet['D']:
 
 # Muliplied PDF
 for row1 in sheet['C']:
-    for row2 in sheet['D']:
+    for row2 in sheet['D']: 
         p = str(int(row1.value) * int(row2.value))
 
         if p not in F_instforn:
